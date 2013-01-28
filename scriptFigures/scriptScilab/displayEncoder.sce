@@ -57,6 +57,13 @@ timeStart=(min(min(time0), min(time1)));
 time0 = time0-timeStart;
 time1 = time1-timeStart;
 
+[time, delta0, delta1] = synchronseEncoders(time0,M0(:,4),time1, -M1(:,4));
+// entraxe
+L = 0.513;
+[x,y,theta] = computeWalkerPosition(time, delta0, delta1, L);
+
+
+
 
 //create figures
 xset('window', 1)
@@ -76,3 +83,10 @@ subplot(224)
 xtitle('Velocity e0(b), e1(r)');
 plot(time0,(M0(:,5)),'b');
 plot(time1,(M1(:,5)),'r');
+
+
+
+//create figures
+xset('window', 2)
+xtitle('Walker position');
+plot(x,y);
