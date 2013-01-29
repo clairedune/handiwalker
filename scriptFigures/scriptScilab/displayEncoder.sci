@@ -54,22 +54,33 @@ plot(time0,(M0(:,5)),'b');
 plot(time1,(M1(:,5)),'r');
 
 //create figures
+// ligne de commande pour creation du gif anime
+// convert -delay 10 -loop 0 image_*gif animation.gif
 xset('window', 2)
 xtitle('Walker position');
-
-
+winnum=winsid();
 xbasc() 
 xset("pixmap",1)
+driver("Rec");
 pt2D = createWalker(L);
 plot2d(x,y, 3,frameflag=4);
 xset("wshow")  ;
 //pause
-
+k=0;
 for i = 1:200:size(x,2)
-  //xclear(2);
+  k=k+1 // numero image
+  
   pt2Dnew = changeFrameWalker(pt2D,x(i),y(i),theta(i));
+  xbasc();
+  clear_pixmap();
+  plot2d(x,y, 3,frameflag=4);
   drawWalker(pt2Dnew);
-  xset("wshow") 
+  show_pixmap();
+  
+//  if pmodulo(k,10)==0 then 
+  nom_image=path+'images/image_'+string(1000+k)+'.gif'; 
+  xs2gif(winnum($),nom_image);
+  
 end
 xset("pixmap",0)
 
