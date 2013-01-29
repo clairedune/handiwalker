@@ -171,16 +171,50 @@ function pt2D = createWalker(L)
   //         P4
   
   
-  P1 = [-L/2 0 1]';
-  P2 = [L/2 0 1]';
+  P1 = [ 0 -L/2 1]';
+  P2 = [ 0 L/2 1]';
   P3 = [0 0 1]';
-  P4 = [0 0.2 1]';
-  
-  
-  
+  P4 = [0.2 0 1]';
   pt2D = [P1 P2 P3 P4];
- endfunction
+endfunction
+
+// ------------------------------------------ //
+//   
+// ------------------------------------------ // 
+function pt2Dnew = changeFrameWalker(pt2D,x,y,theta)
+  
+  // build the 2D rotation matrix
+  RotZ = [cos(mtlb_double(theta)),-sin(mtlb_double(theta)) 
+  sin(mtlb_double(theta)),cos(mtlb_double(theta)) ];
+  
+  //build the 2D translation matrix
+  transXY = [x,y]';
+  
+  //homogeneous transformation matrix
+  oMw = [RotZ transXY; 0 0 1];
+  
+  // change the position of the points
+  A = oMw*pt2D(:,1);  
+  B = oMw*pt2D(:,2);
+  C = oMw*pt2D(:,3);
+  D = oMw*pt2D(:,4);
+  
+  pt2Dnew = [A B C D];
+     
+     
+endfunction
 
 function drawWalker(pt2D)
+  A = pt2D(1:2,1);  
+  B = pt2D(1:2,2);
+  C = pt2D(1:2,3);
+  D = pt2D(1:2,4);
 
+  x= [A(1) D(1) B(1) A(1)];
+  y= [A(2) D(2) B(2) A(2)];
+
+  xpoly(x,y);
+  pol=gce();
+  pol.foreground=color(200,200,200);
+  pol.background=color(210,210,210);
 endfunction  
