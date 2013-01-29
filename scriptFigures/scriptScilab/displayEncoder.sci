@@ -56,12 +56,21 @@ plot(time1,(M1(:,5)),'r');
 //create figures
 xset('window', 2)
 xtitle('Walker position');
-plot2d(x,y, 3,frameflag=4);
 
+
+xbasc() 
+xset("pixmap",1)
 pt2D = createWalker(L);
+plot2d(x,y, 3,frameflag=4);
+xset("wshow")  ;
+//pause
+
 for i = 1:200:size(x,2)
+  //xclear(2);
   pt2Dnew = changeFrameWalker(pt2D,x(i),y(i),theta(i));
   drawWalker(pt2Dnew);
+  xset("wshow") 
 end
+xset("pixmap",0)
 
 endfunction
