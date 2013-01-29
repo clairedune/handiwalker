@@ -1,13 +1,10 @@
-function [time, delta0, delta1] = synchronseEncoders(time0,position0,time1, position1)
+function [time, delta0, delta1] = synchronyseEncoders(time0,position0,time1, position1)
 // time0 contains the time, position0 contains the relative positions between two times
 
 // read the size of the vectors
 size0 = (size(time0,1));
 size1 = (size(time1,1));
 
-disp('TAILLE')
-disp (size0);
-disp (size1);
 
 flagFinish = 0;
 iter0 = 1;
@@ -111,3 +108,79 @@ end
   
 endfunction  
 
+function [M0, M1, time0, time1] = divideEncoderFile(Mencoder)
+// columns encoder file
+// #1 encoder number
+// #2 absolute encoder pulse
+// #3 relative encore pulse
+// #4 absolute distance
+// #5 relative distance
+// #6 time elapsed since last motion
+// #7 absolute machine time
+
+  // devide the matrix into two encoder matrices
+  M0 = [];
+  M1 = [];
+
+  for i=1:size(Mencoder,1)
+    absPulse= Mencoder(i,2);
+    relPulse= Mencoder(i,3);
+    if(Mencoder(i,1)==1) then
+      absPulse= -absPulse;
+      relPulse= -relPulse;
+    end
+
+    absAngle= absPulse/4*%pi/180;
+    relAngle= relPulse/4*%pi/180;
+  
+    // to compute the distance,
+    // we have to take into account the reduction factor
+    // and the diametre of the wheel.
+    absDist = (absAngle/4)*0.1;
+    relDist = (relAngle/4)*0.1;
+    absTime = Mencoder(i,7) ;
+    relTime = Mencoder(i,6) ;
+    estVelocity = relDist/relTime;
+  
+    dataline = [ absAngle relAngle absDist relDist estVelocity absTime relTime];
+  
+    if(Mencoder(i,1)==0) then
+      M0 = [M0; dataline];
+    else
+      M1 = [M1; dataline];
+    end
+end
+
+// create timelines
+time0 = M0(:,$-1);
+time1 = M1(:,$-1);
+timeStart=(min(min(time0), min(time1)));
+time0 = time0-timeStart;
+time1 = time1-timeStart;
+  
+  
+endfunction  
+
+
+function pt2D = createWalker(L)
+  //
+  //   P1====P3====P2
+  //         ||
+  //         ||
+  //         ||
+  //         P4
+  
+  
+  P1 = [-L/2 0 1]';
+  P2 = [L/2 0 1]';
+  P3 = [0 0 1]';
+  P4 = [0 0.2 1]';
+  
+  
+  
+  pt2D = [P1 P2 P3 P4];
+ endfunction
+
+function drawWalker(pt2D)
+
+endfunction  
