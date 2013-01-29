@@ -56,9 +56,6 @@ plot(time1,(M1(:,5)),'r');
 //create figures
 xset('window', 2)
 xtitle('Walker position');
-axe=gca(); // recupere un pointeur sur les axes
-//axe.data_bounds=[-1,-1; 12, 12];
-//axe.isoview='on';
 plot2d(x,y, 3,frameflag=4);
 
 endfunction
