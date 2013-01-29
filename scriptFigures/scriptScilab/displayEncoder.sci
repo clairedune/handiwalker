@@ -59,8 +59,7 @@ plot(time1,(M1(:,5)),'r');
 xset('window', 2)
 xtitle('Walker position');
 winnum=winsid();
-xbasc() 
-xset("pixmap",1)
+f=gcf();f.pixmap='on'; //set the pixmap mode
 driver("Rec");
 pt2D = createWalker(L);
 plot2d(x,y, 3,frameflag=4);
@@ -71,8 +70,8 @@ for i = 1:200:size(x,2)
   k=k+1 // numero image
   
   pt2Dnew = changeFrameWalker(pt2D,x(i),y(i),theta(i));
-  xbasc();
-  clear_pixmap();
+  clf
+  //clear_pixmap();
   plot2d(x,y, 3,frameflag=4);
   drawWalker(pt2Dnew);
   show_pixmap();
@@ -82,6 +81,6 @@ for i = 1:200:size(x,2)
   xs2gif(winnum($),nom_image);
   
 end
-xset("pixmap",0)
+
 
 endfunction
